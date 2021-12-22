@@ -1,3 +1,4 @@
+
 <?php
 require('functions.php');
 session_start();
@@ -34,17 +35,14 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
       try{
 /* (1) 実行するSQL文を用意する            */
           /* $sql = 'xxxxxxxxxxxxx';  */
-       $sql = sprintf('SELECT COUNT(*) AS cnt FROM members WHERE email="%s"',
-            mysqli_real_escape_string($db, $_POST['email'])
-        );
-        
+          $sql = "select * from members where email = :email limit 1";
           $stmt = $dbh->prepare($sql);
           $stmt->bindValue(':email', $email, PDO::PARAM_STR);
           $stmt->execute();
 		  $record = $stmt->fetch();
 /* (2) 条件判定を記述            */
           /* if ( xxxxxxxx ) { */
-          if ($table['cnt'] > 0) {
+          if($record>0){
 			  $error['email'] = 'duplicate';   // eメール重複エラー
 		  }
       }catch (PDOException $e){
